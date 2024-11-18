@@ -25,7 +25,7 @@ int usersSize = sizeof(users)/sizeof(String);
 int buzzerPin = 16;
  
 void setup(){
-  SPI.begin();
+  SPI.begin();  //da verificare se serve o meno
   rfid.PCD_Init();
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(RED_LED_PIN, OUTPUT);
