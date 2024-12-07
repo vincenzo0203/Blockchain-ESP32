@@ -8,31 +8,40 @@
 * For more detail Lab 14 (esp32 lcd 16x2 without I2C https://deepbluembedded.com/esp32-lcd-display-16x2-without-i2c-arduino/?utm_content=cmp-true)
 */
 
-#define GREEN_LED_PIN 32
-#define RED_LED_PIN 4
+#define GREEN_LED_PIN 16
+#define RED_LED_PIN 17
 
 //per modulo RFID
 #define SS_PIN  5  // ESP32 pin GPIO5 
-#define RST_PIN 27 // ESP32 pin GPIO27
+#define RST_PIN 32 // ESP32 pin GPIO27
  
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-LiquidCrystal My_LCD(14, 13, 17, 26, 25, 33);  // RS, EN, D4, D5, D6, D7
+LiquidCrystal lcd(4, 22, 25, 26, 27, 33);  // RS, EN, D4, D5, D6, D7
  
 String users[] = {"f3620c35"};
 int usersSize = sizeof(users)/sizeof(String);
 
-int buzzerPin = 16;
+int buzzerPin = 21;
+
+//testo pe il display
+String text = "Accesso";
+int col = 4;
+
+String text_red = "Negato";
+int col_red = 5;
+
+String text_green = "Consentito";
+int col_green = 3;
  
 void setup(){
+  lcd.begin(16, 2);
+  lcd.print("Benvenuto");
   SPI.begin();  //da verificare se serve o meno
   rfid.PCD_Init();
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(buzzerPin, OUTPUT);
-
-  My_LCD.begin(16, 2);
-  My_LCD.print("AAAAA");
 }
  
 void loop(){
@@ -40,15 +49,25 @@ void loop(){
     String uid = getUID();
     if(checkUID(uid)){
       blinkLed(GREEN_LED_PIN, 2000, 1);
-      My_LCD.print("Accesso consentito");
+
+      //per il testo sul display in caso positivo
+      lcd.setCursor(col, 0);
+      lcd.print(text);
+      lcd.setCursor(col_green, 1);
+      lcd.print(text_green);
     }else{
       blinkLed(RED_LED_PIN, 400, 2);
-      My_LCD.print("Accesso negato");
+
+      //per il testo sul display in caso negativo
+      lcd.setCursor(col, 0);
+      lcd.print(text);
+      lcd.setCursor(col_red, 1);
+      lcd.print(text_red);
       tone(buzzerPin, 1000, 500);
     }
   }
-  delay(10);
-  My_LCD.clear();
+  delay(2000);
+  lcd.clear();
 }
  
 String getUID(){
