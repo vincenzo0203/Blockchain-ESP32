@@ -7,16 +7,18 @@ WSL_PROJECT_PATH = config('WSL_PROJECT_PATH')
 
 JSON_PATH = Path(WSL_PROJECT_PATH) / 'scripts' / 'address.json'
 
+ABI_PATH = Path(WSL_PROJECT_PATH) / 'artifacts' / 'contracts' / 'Lock.sol' / 'Lock.json'
+
 # Configura la connessione alla rete locale Hardhat
 web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
 
 # Carica l'ABI
-with open('blockchain/abi/Lock.json') as f:
+with open(ABI_PATH) as f:
     contract_abi = json.load(f)["abi"]
 
 def get_message():
     """Recupera il messaggio salvato nel contratto."""
-    return contract.functions.message().call()
+    return contract.functions.message().call() + contract.functions.saluto().call()
 
 def get_contract_address():
     try:
