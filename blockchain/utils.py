@@ -18,7 +18,7 @@ with open(ABI_PATH) as f:
 
 def get_message():
     """Recupera il messaggio salvato nel contratto."""
-    return contract.functions.message().call() + contract.functions.saluto().call()
+    return contract.functions.message().call()
 
 def get_contract_address():
     try:
