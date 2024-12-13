@@ -1,5 +1,8 @@
 #include <MFRC522.h>
 #include <LiquidCrystal.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 /**
 * Source code:
@@ -19,10 +22,15 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 
 LiquidCrystal lcd(4, 22, 25, 26, 27, 33);  // RS, EN, D4, D5, D6, D7
  
-String users[] = {"f3620c35"};
-int usersSize = sizeof(users)/sizeof(String);
+//String users[] = {"f3620c35"};
+//int usersSize = sizeof(users)/sizeof(String);
 
 int buzzerPin = 21;
+
+const char* ssid = "TIM-19704933 2.4"; // Sostituisci con il nome della tua rete WiFi
+const char* password = "Lqg5J6oXJzcZhxfmUAtG2KFu"; // Sostituisci con la password della tua rete WiFi
+const char* serverUrl = "http://192.168.1.173:8000/blockchain/check_uid/"; // URL del tuo backend Python
+
 
 //testo pe il display
 String text = "Accesso";
@@ -42,6 +50,18 @@ void setup(){
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(buzzerPin, OUTPUT);
+
+  // Connessione WiFi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    lcd.setCursor(0, 1);
+    lcd.print("Connessione...");
+  }
+  lcd.clear();
+  lcd.print("WiFi Connesso");
+  delay(2000);
+  lcd.clear();
 }
  
 void loop(){
@@ -81,12 +101,56 @@ String getUID(){
 }
  
 bool checkUID(String uid){
-  for(int i = 0; i < usersSize; i++){
+  /*for(int i = 0; i < usersSize; i++){
     if(users[i] == uid){
       return true;
     }
   }
-  return false;
+  return false;*/
+  if (WiFi.status() != WL_CONNECTED) {
+    lcd.setCursor(0, 1);
+    lcd.print("WiFi disconnesso");
+    return false;
+  }
+
+  HTTPClient http;
+  http.begin(serverUrl);
+  http.addHeader("Content-Type", "application/json");
+
+  // Prepara il payload JSON con l'UID
+  String jsonPayload = "{\"uid\": \"" + uid + "\"}";
+  int httpResponseCode = http.POST(jsonPayload);
+
+  if (httpResponseCode > 0) {
+    // Leggi la risposta del server
+    String response = http.getString();
+    http.end();
+
+    // Decodifica la risposta JSON
+    DynamicJsonDocument doc(1024);
+    DeserializationError error = deserializeJson(doc, response);
+
+    if (error) {
+      lcd.setCursor(0, 1);
+      lcd.print("Errore JSON");
+      delay(2000);
+      lcd.clear();
+      return false;
+    }
+
+    // Controlla il valore di "access"
+    bool access = doc["access"];
+    return access;
+  } else {
+    // Gestisce errori HTTP
+    lcd.setCursor(0, 1);
+    lcd.print("Errore HTTP: ");
+    lcd.print(httpResponseCode);
+    http.end();
+    delay(2000);
+    lcd.clear();
+    return false;
+  }
 }
  
 void blinkLed(int led, int duration, int repeat){

@@ -31,3 +31,8 @@ def get_contract_address():
         raise RuntimeError("Errore nella lettura del file JSON: Formato non valido.")
 
 contract = web3.eth.contract(address=get_contract_address(), abi=contract_abi)
+
+def is_valid_uid(uid):
+    # Puoi personalizzare questa lista o spostare la logica sul database in futuro
+    valid_uids = ["f3620c35", "another_valid_uid"]  # Lista statica come esempio
+    return uid in valid_uids
