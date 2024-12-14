@@ -124,7 +124,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SECURE_SSL_REDIRECT = True  # Forza il redirect su HTTPS
+SECURE_SSL_REDIRECT = False  # Forza il redirect su HTTPS
 SESSION_COOKIE_SECURE = True  # Usa cookie solo tramite HTTPS
 CSRF_COOKIE_SECURE = True  # Protegge i CSRF cookie tramite HTTPS
 SECURE_HSTS_SECONDS = 31536000  # Abilita HSTS
