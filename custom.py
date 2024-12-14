@@ -16,7 +16,7 @@ if __name__ == "__main__":
     application = get_wsgi_application()
 
     # Crea il server WSGI con il contesto SSL
-    server = make_server('127.0.0.1', 8000, application)
+    server = make_server('0.0.0.0', 8000, application)
     server.socket = ssl_context.wrap_socket(server.socket, server_side=True)
 
     print("Django development server running at https://127.0.0.1:8000/")
