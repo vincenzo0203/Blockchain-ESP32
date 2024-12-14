@@ -20,26 +20,28 @@ Per poter usare la libreria MFRC522 con la ESP32 bisogna modificare il file MFRC
 ![BLOCKCHAIN-ESP32](esp32_schema.png)
 
 |Componente|Pin ESP32|Descrizione|
-|----------|---------|-----------|
+|:--------:|:-------:|:---------:|
 |LED1|GPIO 16|Led Verde|
 |LED2|GPIO 17|Led Rosso|
 |Buzzer|GPIO 21|Buzzer|
 
+
 Per l'RFID
 |Componente|Pin ESP32|Descrizione|
-|----------|---------|-----------|
+|:--------:|:-------:|:---------:|
 |SS (SDA)|GPIO 5|Chip Select (SS)|
 |SCK|GPIO 18|Clock (SCK)|
 |MOSI|GPIO 23|MOSI (Master Out Slave In)|
 |MISO|GPIO 19|MISO (Master In Slave Out)|
-|RST (SDA)|GPIO 32|Reset|
+|RST|GPIO 32|Reset|
+
 
 Per il display LCD (senza modulo I2C)
 |Componente|Pin ESP32|Descrizione|
-|----------|---------|-----------|
-|LCD (RS)|GPIO 4|Register Select (RS)|
-|LCD (E)|GPIO 22|Enable (E)|
-|LCD (D4)|GPIO 25|Dati 4 (D4)|
-|LCD (D5)|GPIO 26|Dati 5 (D5)|
-|LCD (D6)|GPIO 27|Dati 6 (D6)|
-|LCD (D7)|GPIO 33|Dati 7 (D7)|
+|:--------:|:-------:|:---------:|
+|RS|GPIO 4|Register Select (RS)|
+|E|GPIO 22|Enable (E)|
+|D4|GPIO 25|Dati 4 (D4)|
+|D5|GPIO 26|Dati 5 (D5)|
+|D6|GPIO 27|Dati 6 (D6)|
+|D7|GPIO 33|Dati 7 (D7)|
