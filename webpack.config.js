@@ -20,7 +20,7 @@ const processNestedHtml = (content, loaderContext, dir = null) =>
 // HTML generation
 const paths = []
 const generateHTMLPlugins = () =>
-  glob.sync('./src/*.html').map((dir) => {
+  glob.sync('./blockchain/templates/*.html').map((dir) => {
     const filename = path.basename(dir)
 
     if (filename !== '404.html') {
@@ -29,15 +29,15 @@ const generateHTMLPlugins = () =>
 
     return new HtmlWebpackPlugin({
       filename,
-      template: `./src/${filename}`,
-      favicon: `./src/images/favicon.ico`,
+      template: `./blockchain/templates/${filename}`,
+      favicon: "{% static 'images/favicon.ico' %}",
       inject: 'body',
     })
   })
 
 module.exports = {
   mode: 'development',
-  entry: './src/js/index.js',
+  entry: "{% static 'js/index.js' %}",
   devServer: {
     static: {
       directory: path.join(__dirname, './build'),

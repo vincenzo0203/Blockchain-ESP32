@@ -1,7 +1,7 @@
-import "jsvectormap/dist/css/jsvectormap.css";
-import "flatpickr/dist/flatpickr.min.css";
-import "../css/satoshi.css";
-import "../css/style.css";
+import "{% static 'jsvectormap/dist/css/jsvectormap.css' %}";
+import "{% static 'flatpickr/dist/flatpickr.min.css' %}";
+import "{% static '../css/satoshi.css' %}";
+import "{% static '../css/style.css' %}";
 
 import Alpine from "alpinejs";
 import persist from "@alpinejs/persist";
