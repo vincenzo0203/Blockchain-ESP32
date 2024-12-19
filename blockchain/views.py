@@ -26,3 +26,6 @@ def check_uid(request):
         except json.JSONDecodeError:
             return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
     return JsonResponse({"status": "error", "message": "Invalid method"}, status=405)
+
+def index(request):
+    return render(request, 'index.html')
