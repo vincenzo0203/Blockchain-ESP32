@@ -137,3 +137,7 @@ LOGIN_URL = 'login'  # URL del login
 LOGIN_REDIRECT_URL = 'dashboard'  # Dove reindirizzare dopo il login
 LOGOUT_REDIRECT_URL = 'login'  # Dove reindirizzare dopo il logout
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://127.0.0.1:8000',
+    'http://127.0.0.1:8000',  # Aggiungi anche il supporto per HTTP
+]

@@ -4,6 +4,9 @@
   <div class="container mt-5">
     <h2>Benvenuto, {{ user.username }}!</h2>
     <p>Questa è la tua dashboard.</p>
-    <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
   </div>
 {% endblock %}

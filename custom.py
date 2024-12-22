@@ -4,6 +4,8 @@ from django.core.management import execute_from_command_line
 from django.core.management.commands.runserver import Command as runserver
 from django.core.wsgi import get_wsgi_application
 from wsgiref.simple_server import make_server
+#from django.views.static import serve
+#from django.conf import settings
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
@@ -14,6 +16,12 @@ if __name__ == "__main__":
 
     # Crea l'applicazione WSGI di Django
     application = get_wsgi_application()
+    
+    # Aggiungi la gestione dei file statici se siamo in modalità di sviluppo
+    #def static_file_server(environ, start_response):
+    #    if environ['PATH_INFO'].startswith(settings.STATIC_URL):
+    #        return serve(environ, start_response, document_root=settings.STATIC_ROOT)
+    #    return application(environ, start_response)
 
     # Crea il server WSGI con il contesto SSL
     server = make_server('0.0.0.0', 8000, application)
