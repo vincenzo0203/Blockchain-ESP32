@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blockchain',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,9 @@ SECURE_HSTS_SECONDS = 31536000  # Abilita HSTS
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Configurazioni della pagina di login
+LOGIN_URL = 'login'  # URL del login
+LOGIN_REDIRECT_URL = 'dashboard'  # Dove reindirizzare dopo il login
+LOGOUT_REDIRECT_URL = 'login'  # Dove reindirizzare dopo il logout
+
