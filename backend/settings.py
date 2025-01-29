@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blockchain',
     'accounts',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
