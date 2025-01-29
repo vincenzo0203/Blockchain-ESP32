@@ -7,7 +7,7 @@ WSL_PROJECT_PATH = config('WSL_PROJECT_PATH')
 
 JSON_PATH = Path(WSL_PROJECT_PATH) / 'scripts' / 'address.json'
 
-ABI_PATH = Path(WSL_PROJECT_PATH) / 'artifacts' / 'contracts' / 'Lock.sol' / 'Lock.json'
+ABI_PATH = Path(WSL_PROJECT_PATH) / 'artifacts' / 'contracts' / 'SecurityLog.sol' / 'SecurityLog.json'
 
 # Configura la connessione alla rete locale Hardhat
 web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
