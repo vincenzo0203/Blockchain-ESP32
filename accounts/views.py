@@ -44,9 +44,10 @@ def person_add(request):
         }})
 
 @login_required
-def person_edit(request, pk):
+def person_edit(request):
     if request.method == 'POST':
-        person = get_object_or_404(Person, pk=pk)
+        id = request.POST.get('id')
+        person = get_object_or_404(Person, pk=id)
         person.rfid = request.POST.get('rfid')
         person.first_name = request.POST.get('first_name')
         person.last_name = request.POST.get('last_name')
@@ -59,8 +60,9 @@ def person_edit(request, pk):
         }})
 
 @login_required
-def person_delete(request, pk):
+def person_delete(request):
     if request.method == 'POST':
-        person = get_object_or_404(Person, pk=pk)
+        id = request.POST.get('id')
+        person = get_object_or_404(Person, pk=id)
         person.delete()
         return JsonResponse({'status': 'success'})

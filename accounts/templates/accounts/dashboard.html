@@ -171,6 +171,15 @@
       });
     });
 
+    // Quando il bottone di cancellazione viene cliccato
+    $('#deletePersonModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Il bottone che ha aperto il modal
+        var personId = button.data('id');   // Prendi l'ID della persona dal bottone
+
+        // Imposta l'ID nel campo nascosto
+        $('#delete_person_id').val(personId);
+    });
+
     // Handle Delete Person Form Submission
     $('#deletePersonForm').on('submit', function (e) {
         e.preventDefault();
@@ -178,14 +187,14 @@
 
         $.ajax({
             type: 'POST',
-            url: '{% url "person_delete" 0 %}'.replace("0", personId),
+            url: '{% url "person_delete" %}',
             data: {
                 id: personId,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function (response) {
                 $(`#person-row-${personId}`).remove();
-                $('#deletePersonModal').modal('hide');
+                $('#deletePersonModal .btn-close').click();
             },
             error: function (xhr, errmsg, err) {
                 console.log("Errore nella richiesta: ", errmsg);
