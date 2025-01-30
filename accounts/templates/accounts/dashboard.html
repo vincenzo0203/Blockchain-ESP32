@@ -143,6 +143,15 @@
       modal.find('#edit_last_name').val(last_name);
     });
 
+    // Quando il bottone di cancellazione viene cliccato
+    $('#deletePersonModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Il bottone che ha aperto il modal
+        var personId = button.data('id');   // Prendi l'ID della persona dal bottone
+
+        // Imposta l'ID nel campo nascosto
+        $('#delete_person_id').val(personId);
+    });
+
     // Handle Add Person Form Submission
     $('#addPersonForm').on('submit', function (e) {
       e.preventDefault();
@@ -171,13 +180,29 @@
       });
     });
 
-    // Quando il bottone di cancellazione viene cliccato
-    $('#deletePersonModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Il bottone che ha aperto il modal
-        var personId = button.data('id');   // Prendi l'ID della persona dal bottone
+    // Handle Edit Person Form Submission
+    $('#editPersonForm').on('submit', function (e) {
+      e.preventDefault();
+      var data = $(this).serialize();
+      console.log(data);
 
-        // Imposta l'ID nel campo nascosto
-        $('#delete_person_id').val(personId);
+      $.ajax({
+        type: 'POST',
+        url: '{% url "person_edit" %}',
+        data: data,
+        success: function (response) {
+          console.log(response)
+          // Trova la riga della persona modificata nella tabella
+          var row = $('#person-row-' + response.person.id);
+                
+          // Aggiorna i valori della tabella
+          row.find('td:nth-child(1)').text(response.person.rfid);
+          row.find('td:nth-child(2)').text(response.person.first_name);
+          row.find('td:nth-child(3)').text(response.person.last_name);
+          $('.btn-close').click();  // Simula il clic sul bottone di chiusura
+          $('#editPersonForm')[0].reset();
+        }
+      });
     });
 
     // Handle Delete Person Form Submission
