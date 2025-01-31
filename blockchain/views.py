@@ -1,28 +1,37 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .utils import get_message, is_valid_uid
+from .utils import is_valid_uid, log_access_on_blockchain, get_access_logs
 import json
-
-def contract_message(request):
-    try:
-        message = get_message()
-        return JsonResponse({"message": message})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
 
 @csrf_exempt
 def check_uid(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            uid = data.get('uid')
-            print(uid)
-            # Verifica UID utilizzando la funzione helper
-            if is_valid_uid(uid):
+            uid = data.get("uid")
+
+            if not uid:
+                return JsonResponse({"error": "UID non fornito"}, status=400)
+
+            access_granted = is_valid_uid(uid)  # Controlla se l'UID è valido
+            tx_hash = log_access_on_blockchain(uid, access_granted)  # Registra nella blockchain
+
+            print(tx_hash)
+
+            if access_granted:
                 return JsonResponse({"status": "success", "access": True})
             else:
                 return JsonResponse({"status": "success", "access": False})
         except json.JSONDecodeError:
             return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
     return JsonResponse({"status": "error", "message": "Invalid method"}, status=405)
+
+@csrf_exempt
+def get_logs(request):
+    """Restituisce tutti i log degli accessi registrati sulla blockchain"""
+    if request.method == 'GET':
+        logs = get_access_logs()
+        return JsonResponse({"logs": logs})
+
+    return JsonResponse({"error": "Metodo non consentito"}, status=405)
