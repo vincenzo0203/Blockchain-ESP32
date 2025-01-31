@@ -40,6 +40,28 @@
         {% endif %}
       </tbody>
     </table>
+
+    <!-- Aggiungi la navigazione per la paginazione -->
+    {% if people.has_next %}
+    <button id="loadMoreBtn" class="btn btn-primary mt-3" data-next-page="{{ people.next_page_number }}">Carica più persone</button>
+    {% endif %}
+
+    <!-- Zona per i Log -->
+    <div class="mt-4">
+      <h3>Storico Operazioni sull'utente</h3>
+      <div id="logContainer" class="border p-3" style="height: 300px; overflow-y: scroll; background-color: #f8f9fa;">
+        <!-- I log verranno caricati qui -->
+        {% if logs %}
+          <ul class="list-unstyled">
+            {% for log in logs %}
+              <li>{{ log.timestamp }} - {{ log.message }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>Nessuna informazione disponibile.</p>
+        {% endif %}
+      </div>
+    </div>
   </div>
 
   <!-- Add Person Modal -->
@@ -228,5 +250,47 @@
             }
         });
     });
+
+
+    // Funzione per caricare i log
+  function loadLogs() {
+    $.ajax({
+      type: 'GET',
+      url: '{% url "get_logs" %}',
+      success: function(response) {
+        var logsContainer = $('#logContainer');
+        logsContainer.empty(); // Svuota il contenitore esistente
+
+        if (response.logs.length > 0) {
+          var logList = '<ul class="list-unstyled">';
+          response.logs.forEach(function(log) {
+            logList += `<li>${log.timestamp} - ${log.message}</li>`;
+          });
+          logList += '</ul>';
+          logsContainer.append(logList);
+        } else {
+          logsContainer.append('<p>No logs available.</p>');
+        }
+      }
+    });
+  }
+
+  // Carica i log all'inizio
+  $(document).ready(function() {
+    loadLogs();
+  });
+
+  // Esegui il caricamento dei log dopo ogni operazione (es. aggiunta, modifica, cancellazione)
+  $('#addPersonForm').on('submit', function() {
+    loadLogs();  // Ricarica i log dopo aver aggiunto una persona
+  });
+
+  $('#editPersonForm').on('submit', function() {
+    loadLogs();  // Ricarica i log dopo aver modificato una persona
+  });
+
+  $('#deletePersonForm').on('submit', function() {
+    loadLogs();  // Ricarica i log dopo aver cancellato una persona
+  });
   </script>
 {% endblock %}

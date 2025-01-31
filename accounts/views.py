@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Person
+from django.core.paginator import Paginator
 
 def login_view(request):
     if request.method == 'POST':
@@ -22,7 +23,19 @@ def login_view(request):
 @login_required
 def user_management_view(request):
     people = Person.objects.all()
-    return render(request, 'accounts/user_management.html', {'people': people})
+    
+    paginator = Paginator(people, 10)
+
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    response = render(request, 'accounts/user_management.html', {'people': page_obj})
+    
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    
+    return response
 
 @login_required
 def person_add(request):
