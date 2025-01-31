@@ -79,3 +79,81 @@ def get_access_logs():
 
     except Exception as e:
         raise RuntimeError(f"Errore nel recupero dei log di accesso: {str(e)}")
+    
+def log_admin_action_on_blockchain(username_admin, action, user):
+    """Registra un'azione amministrativa sulla blockchain"""
+    try:
+        nonce = web3.eth.get_transaction_count(OWNER_ADDRESS)
+
+        txn = contract.functions.logAdminAction(username_admin, action, user).build_transaction({
+            "from": OWNER_ADDRESS,
+            "nonce": nonce,
+            "gas": 200000,
+            "gasPrice": web3.to_wei("10", "gwei")
+        })
+
+        signed_txn = web3.eth.account.sign_transaction(txn, PRIVATE_KEY)
+        txn_hash = web3.eth.send_raw_transaction(signed_txn.raw_transaction)
+
+        return txn_hash.hex()
+    
+    except Exception as e:
+        raise RuntimeError(f"Errore blockchain (AdminActionLog): {str(e)}")
+
+def get_admin_action_logs():
+    """Recupera tutti i log delle azioni amministrative dalla blockchain"""
+    try:
+        admin_action_logs = contract.functions.getAllAdminActionLogs().call()
+
+        logs = []
+        for log in admin_action_logs:
+            logs.append({
+                'username_admin': log[0],
+                'action': log[1],
+                'user': log[2],
+                'timestamp': datetime.datetime.fromtimestamp(log[3], tz=ZoneInfo("UTC")).astimezone(ZoneInfo("Europe/Rome"))
+            })
+
+        return logs
+
+    except Exception as e:
+        raise RuntimeError(f"Errore nel recupero dei log delle azioni amministrative: {str(e)}")
+
+def log_admin_login_on_blockchain(username_admin, granted):
+    """Registra un login amministrativo sulla blockchain"""
+    try:
+        nonce = web3.eth.get_transaction_count(OWNER_ADDRESS)
+
+        txn = contract.functions.logAdminAccess(username_admin, granted).build_transaction({
+            "from": OWNER_ADDRESS,
+            "nonce": nonce,
+            "gas": 200000,
+            "gasPrice": web3.to_wei("10", "gwei")
+        })
+
+        signed_txn = web3.eth.account.sign_transaction(txn, PRIVATE_KEY)
+        txn_hash = web3.eth.send_raw_transaction(signed_txn.raw_transaction)
+
+        return txn_hash.hex()
+    
+    except Exception as e:
+        raise RuntimeError(f"Errore blockchain (AdminLoginLog): {str(e)}")
+
+def get_access_admin_logs():
+    """Recupera tutti i log dei login amministrativi dalla blockchain"""
+    try:
+        admin_login_logs = contract.functions.getAllAdminLoginLogs().call()
+
+        logs = []
+        for log in admin_login_logs:
+            logs.append({
+                'username_admin': log[0],
+                'granted': log[1],
+                'timestamp': datetime.datetime.fromtimestamp(log[2], tz=ZoneInfo("UTC")).astimezone(ZoneInfo("Europe/Rome"))
+            })
+
+        return logs
+
+    except Exception as e:
+        raise RuntimeError(f"Errore nel recupero dei log dei login amministrativi: {str(e)}")
+

@@ -6,6 +6,8 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Person
 from django.core.paginator import Paginator
+from blockchain.utils import log_admin_login_on_blockchain
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -13,9 +15,11 @@ def login_view(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
+            log_admin_login_on_blockchain(username, True)
             login(request, user)
             return redirect('user_management')  # Redirect alla dashboard
         else:
+            log_admin_login_on_blockchain(username, False)
             messages.error(request, 'Credenziali non valide!')
     
     return render(request, 'accounts/login.html')
