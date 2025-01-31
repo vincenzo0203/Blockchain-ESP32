@@ -1,20 +1,22 @@
-{% extends 'base_generic.html' %}
+{% extends 'dashboard.html' %}
 
 {% block content %}
   <div class="container mt-5">
+    <!--
     <h2>Benvenuto, {{ user.username }}!</h2>
     <p>Questa è la tua dashboard.</p>
-
+    -->
+    
     <!-- Button to Open Add Person Modal -->
     <button class="btn btn-success mb-3 float-end" data-bs-toggle="modal" data-bs-target="#addPersonModal">Aggiungi Persona</button>
 
     <!-- Table for Displaying Persons -->
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped">
       <thead>
         <tr>
-          <th>RFID</th>
-          <th>Nome</th>
-          <th>Cognome</th>
+          <th style="width: 20%;">RFID</th>
+          <th style="width: 25%;">Nome</th>
+          <th style="width: 25%;">Cognome</th>
           <th>Azioni</th>
         </tr>
       </thead>

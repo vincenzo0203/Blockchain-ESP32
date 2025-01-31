@@ -13,16 +13,16 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('dashboard')  # Redirect alla dashboard
+            return redirect('user_management')  # Redirect alla dashboard
         else:
             messages.error(request, 'Credenziali non valide!')
     
     return render(request, 'accounts/login.html')
 
 @login_required
-def dashboard_view(request):
+def user_management_view(request):
     people = Person.objects.all()
-    return render(request, 'accounts/dashboard.html', {'people': people})
+    return render(request, 'accounts/user_management.html', {'people': people})
 
 @login_required
 def person_add(request):
