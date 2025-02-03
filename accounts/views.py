@@ -6,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Person
 from django.core.paginator import Paginator
-from blockchain.utils import log_admin_login_on_blockchain
+from blockchain.utils import log_admin_login_on_blockchain, log_admin_action_on_blockchain
 
 
 def login_view(request):
@@ -47,12 +47,17 @@ def person_add(request):
         rfid = request.POST.get('rfid')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
+        admin = request.user.username
+        
 
         person = Person.objects.create(
             rfid=rfid,
             first_name=first_name,
             last_name=last_name
         )
+        
+        log_admin_action_on_blockchain(admin,"Inserimento", rfid)
+
         return JsonResponse({'person': {
             'id': person.id,
             'rfid': person.rfid,
@@ -63,12 +68,14 @@ def person_add(request):
 @login_required
 def person_edit(request):
     if request.method == 'POST':
+        admin = request.user.username
         id = request.POST.get('id')
         person = get_object_or_404(Person, pk=id)
         person.rfid = request.POST.get('rfid')
         person.first_name = request.POST.get('first_name')
         person.last_name = request.POST.get('last_name')
         person.save()
+        log_admin_action_on_blockchain(admin,"Modifica", person.rfid)
         return JsonResponse({'person': {
             'id': person.id,
             'rfid': person.rfid,
@@ -79,7 +86,9 @@ def person_edit(request):
 @login_required
 def person_delete(request):
     if request.method == 'POST':
+        admin = request.user.username
         id = request.POST.get('id')
         person = get_object_or_404(Person, pk=id)
+        log_admin_action_on_blockchain(admin,"Eliminazione", person.rfid)
         person.delete()
         return JsonResponse({'status': 'success'})

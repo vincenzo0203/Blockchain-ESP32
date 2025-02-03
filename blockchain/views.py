@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .utils import is_valid_uid, log_access_on_blockchain, get_access_logs, get_access_admin_logs
+from .utils import is_valid_uid, log_access_on_blockchain, get_access_logs, get_access_admin_logs, get_admin_action_logs
 import json
 
 @csrf_exempt
@@ -42,6 +42,18 @@ def get_admin_login_logs(request):
     if request.method == 'GET':
         try:
             logs = get_access_admin_logs()
+            return JsonResponse({"logs": logs}, safe=False)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Metodo non consentito"}, status=405)
+
+@csrf_exempt
+def get_admin_action_logs_view(request):
+    """Restituisce tutti i log delle azioni amministrative registrati sulla blockchain"""
+    if request.method == 'GET':
+        try:
+            logs = get_admin_action_logs()
             return JsonResponse({"logs": logs}, safe=False)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
