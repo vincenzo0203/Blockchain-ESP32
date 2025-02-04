@@ -42,6 +42,17 @@ def user_management_view(request):
     return response
 
 @login_required
+def user_access_view(request):
+
+    response = render(request, 'accounts/user_access.html')
+    
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    
+    return response
+
+@login_required
 def person_add(request):
     if request.method == 'POST':
         rfid = request.POST.get('rfid')

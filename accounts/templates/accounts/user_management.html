@@ -200,6 +200,7 @@
           `);
           $('.btn-close').click();  // Simula il clic sul bottone di chiusura
           $('#addPersonForm')[0].reset();
+          loadLogs();
         }
       });
     });
@@ -225,6 +226,7 @@
           row.find('td:nth-child(3)').text(response.person.last_name);
           $('.btn-close').click();  // Simula il clic sul bottone di chiusura
           $('#editPersonForm')[0].reset();
+          loadLogs();
         }
       });
     });
@@ -244,6 +246,7 @@
             success: function (response) {
                 $(`#person-row-${personId}`).remove();
                 $('#deletePersonModal .btn-close').click();
+                loadLogs();
             },
             error: function (xhr, errmsg, err) {
                 console.log("Errore nella richiesta: ", errmsg);
@@ -256,15 +259,26 @@
   function loadLogs() {
     $.ajax({
       type: 'GET',
-      url: '{% url "get_logs" %}',
+      url: '{% url "get_action_admin" %}',
       success: function(response) {
+        console.log(response)
         var logsContainer = $('#logContainer');
         logsContainer.empty(); // Svuota il contenitore esistente
 
         if (response.logs.length > 0) {
           var logList = '<ul class="list-unstyled">';
           response.logs.forEach(function(log) {
-            logList += `<li>${log.timestamp} - ${log.message}</li>`;
+            let date = new Date(log.timestamp);
+    
+            let day = String(date.getDate()).padStart(2, '0');
+            let month = String(date.getMonth() + 1).padStart(2, '0'); // Mesi da 0 a 11
+            let year = date.getFullYear();
+            
+            let hours = String(date.getHours()).padStart(2, '0');
+            let minutes = String(date.getMinutes()).padStart(2, '0');
+            let seconds = String(date.getSeconds()).padStart(2, '0');
+
+            logList += `<li>${day}-${month}-${year} ${hours}:${minutes}:${seconds} - ${log.username_admin} - ${log.action} - ${log.user}</li>`;
           });
           logList += '</ul>';
           logsContainer.append(logList);
@@ -278,19 +292,6 @@
   // Carica i log all'inizio
   $(document).ready(function() {
     loadLogs();
-  });
-
-  // Esegui il caricamento dei log dopo ogni operazione (es. aggiunta, modifica, cancellazione)
-  $('#addPersonForm').on('submit', function() {
-    loadLogs();  // Ricarica i log dopo aver aggiunto una persona
-  });
-
-  $('#editPersonForm').on('submit', function() {
-    loadLogs();  // Ricarica i log dopo aver modificato una persona
-  });
-
-  $('#deletePersonForm').on('submit', function() {
-    loadLogs();  // Ricarica i log dopo aver cancellato una persona
   });
   </script>
 {% endblock %}

@@ -5,6 +5,7 @@ from web3 import Web3
 import datetime
 from zoneinfo import ZoneInfo
 
+
 WSL_PROJECT_PATH = config('WSL_PROJECT_PATH')
 
 JSON_PATH = Path(WSL_PROJECT_PATH) / 'scripts' / 'address.json'
@@ -43,6 +44,8 @@ def is_valid_uid(uid):
 def log_access_on_blockchain(rfid, granted):
     """Registra un accesso RFID sulla blockchain"""
     try:
+        from accounts.views import send_new_data
+        
         nonce = web3.eth.get_transaction_count(OWNER_ADDRESS)
 
         txn = contract.functions.logAccess(rfid, granted).build_transaction({
@@ -55,6 +58,25 @@ def log_access_on_blockchain(rfid, granted):
         signed_txn = web3.eth.account.sign_transaction(txn, PRIVATE_KEY)
         txn_hash = web3.eth.send_raw_transaction(signed_txn.raw_transaction)
 
+        # Attendere la conferma della transazione sulla blockchain
+        receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+
+        # Ottenere il numero del blocco
+        block_number = receipt.blockNumber
+
+        # Ottenere il blocco per il timestamp
+        block = web3.eth.get_block(block_number)
+        timestamp = block.timestamp
+
+        # Creazione del dizionario con i dati
+        log_data = {
+            "rfid": rfid,
+            "timestamp": timestamp,
+            "granted": granted
+        }
+
+        # Invia i dati alla funzione send_new_data
+        send_new_data(log_data)
 
         return txn_hash.hex()
     
