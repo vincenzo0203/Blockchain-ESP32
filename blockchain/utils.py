@@ -58,26 +58,6 @@ def log_access_on_blockchain(rfid, granted):
         signed_txn = web3.eth.account.sign_transaction(txn, PRIVATE_KEY)
         txn_hash = web3.eth.send_raw_transaction(signed_txn.raw_transaction)
 
-        # Attendere la conferma della transazione sulla blockchain
-        receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
-
-        # Ottenere il numero del blocco
-        block_number = receipt.blockNumber
-
-        # Ottenere il blocco per il timestamp
-        block = web3.eth.get_block(block_number)
-        timestamp = block.timestamp
-
-        # Creazione del dizionario con i dati
-        log_data = {
-            "rfid": rfid,
-            "timestamp": timestamp,
-            "granted": granted
-        }
-
-        # Invia i dati alla funzione send_new_data
-        send_new_data(log_data)
-
         return txn_hash.hex()
     
     except Exception as e:
