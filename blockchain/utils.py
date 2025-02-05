@@ -44,7 +44,6 @@ def is_valid_uid(uid):
 def log_access_on_blockchain(rfid, granted):
     """Registra un accesso RFID sulla blockchain"""
     try:
-        from accounts.views import send_new_data
         
         nonce = web3.eth.get_transaction_count(OWNER_ADDRESS)
 
