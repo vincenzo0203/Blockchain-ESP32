@@ -9,12 +9,12 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    /*max-width: 800px;*/
     margin: auto;
     background-color: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    /*border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);*/
 }
 
 h2, h3 {
@@ -66,17 +66,12 @@ form button:hover {
 }
 
 /* Stile per i pulsanti */
-.btn-danger {
-    background-color: red;
-    border: none;
-    padding: 5px 10px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
+.btn-warning{
+  color:white !important
 }
 
-.btn-danger:hover {
-    background-color: darkred;
+.btn-danger{
+  background-color: red !important
 }
 
 /* Stile per il box log */
@@ -93,7 +88,6 @@ form button:hover {
 {% endblock %}
 
 {% block content %}
-  <div class="container">
     <!--
     <h2>Benvenuto, {{ user.username }}!</h2>
     <p>Questa è la tua dashboard.</p>
@@ -120,7 +114,7 @@ form button:hover {
               <td>{{ person.first_name }}</td>
               <td>{{ person.last_name }}</td>
               <td>
-                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonModal" data-id="{{ person.id }}" data-rfid="{{ person.rfid }}" data-first-name="{{ person.first_name }}" data-last-name="{{ person.last_name }}">Modifica</button>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonModal" data-id="{{ person.id }}" data-rfid="{{ person.rfid }}" data-first-name="{{ person.first_name }}" data-last-name="{{ person.last_name }}">Modifica</button>
                 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePersonModal" data-id="{{ person.id }}">Cancella</button>
               </td>
             </tr>
@@ -139,7 +133,7 @@ form button:hover {
     {% endif %}
 
     <!-- Zona per i Log -->
-    <div class="mt-4">
+    <div class="mt-5">
       <h3>Storico Operazioni sull'utente</h3>
       <div id="logContainer" class="border p-3" style="height: 300px; overflow-y: scroll; background-color: #f8f9fa;">
         <!-- I log verranno caricati qui -->
@@ -154,7 +148,6 @@ form button:hover {
         {% endif %}
       </div>
     </div>
-  </div>
 
   <!-- Add Person Modal -->
   <div class="modal fade" id="addPersonModal" tabindex="-1" aria-labelledby="addPersonModalLabel" aria-hidden="true">
@@ -229,11 +222,11 @@ form button:hover {
           <p>Sei sicuro di voler cancellare questa persona?</p>
         </div>
         <div class="modal-footer">
-          <form id="deletePersonForm" method="POST">
+          <form id="deletePersonForm" method="POST" class="d-flex gap-3">
             {% csrf_token %}
             <input type="hidden" id="delete_person_id" name="id">
-            <button type="submit" class="btn btn-danger float-end">Cancella</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+            <button type="submit" class="btn btn-danger float-end">Cancella</button>
           </form>
         </div>
       </div>
