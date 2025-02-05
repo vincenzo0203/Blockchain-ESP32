@@ -1,71 +1,52 @@
 {% extends 'dashboard.html' %}
 
 {% block content %}
-  <div class="container">
-
-    <!-- Zona per i Log -->
-    <div>
-      <h3>Storico Login degli Admin</h3>
-      <div id="logContainer" class="border p-3" style="height: 300px; overflow-y: scroll; background-color: #f8f9fa;">
-        <!-- I log verranno caricati qui -->
+  <div class="container mt-4">
+    <div class="card shadow-lg p-4 rounded-3">
+      <h3 class="text-center mb-4">Storico Login degli Admin</h3>
+      <div id="logContainer" class="border p-3 rounded-3 bg-light" style="height: 300px; overflow-y: auto;">
         {% if logs %}
-          <ul class="list-unstyled">
+          <ul class="list-group">
             {% for log in logs %}
-              <li>{{ log.timestamp }} - {{ log.message }}</li>
+              <li class="list-group-item">{{ log.timestamp }} - {{ log.message }}</li>
             {% endfor %}
           </ul>
         {% else %}
-          <p>Nessuna informazione disponibile.</p>
+          <p class="text-center text-muted">Nessuna informazione disponibile.</p>
         {% endif %}
       </div>
     </div>
   </div>
 
-  
-
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // Funzione per caricare i log
     function loadLogs() {
       $.ajax({
         type: 'GET',
         url: '{% url "get_login_admin" %}',
         success: function(response) {
-          console.log(response)
+          console.log(response);
           var logsContainer = $('#logContainer');
-          logsContainer.empty(); // Svuota il contenitore esistente
+          logsContainer.empty();
 
           if (response.logs.length > 0) {
-            //response.logs.sort(function(a, b) {
-            //  return new Date(b.timestamp) - new Date(a.timestamp); // Ordinamento decrescente
-            //});
-
-            var logList = '<ul class="list-unstyled">';
+            var logList = '<ul class="list-group">';
             response.logs.forEach(function(log) {
               let date = new Date(log.timestamp);
-      
-              let day = String(date.getDate()).padStart(2, '0');
-              let month = String(date.getMonth() + 1).padStart(2, '0'); // Mesi da 0 a 11
-              let year = date.getFullYear();
-              
-              let hours = String(date.getHours()).padStart(2, '0');
-              let minutes = String(date.getMinutes()).padStart(2, '0');
-              let seconds = String(date.getSeconds()).padStart(2, '0');
-
-              logList += `<li>${day}-${month}-${year} ${hours}:${minutes}:${seconds} - ${log.username_admin} - ${log.granted}</li>`;
+              let formattedDate = date.toLocaleDateString('it-IT') + ' ' + date.toLocaleTimeString('it-IT');
+              logList += `<li class="list-group-item">${formattedDate} - ${log.username_admin} - ${log.granted}</li>`;
             });
             logList += '</ul>';
             logsContainer.append(logList);
           } else {
-            logsContainer.append('<p>Nessuna informazione disponibile.</p>');
+            logsContainer.append('<p class="text-center text-muted">Nessuna informazione disponibile.</p>');
           }
         }
       });
     }
 
-    // Carica i log all'inizio
     $(document).ready(function() {
       loadLogs();
     });
