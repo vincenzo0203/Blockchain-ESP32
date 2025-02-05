@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .utils import is_valid_uid, log_access_on_blockchain, get_access_logs, get_access_admin_logs, get_admin_action_logs
+from django.contrib.auth.decorators import login_required
 import json
 
 @csrf_exempt
@@ -27,6 +28,7 @@ def check_uid(request):
     return JsonResponse({"status": "error", "message": "Invalid method"}, status=405)
 
 @csrf_exempt
+@login_required
 def get_logs(request):
     """Restituisce tutti i log degli accessi registrati sulla blockchain"""
     if request.method == 'GET':
@@ -36,6 +38,7 @@ def get_logs(request):
     return JsonResponse({"error": "Metodo non consentito"}, status=405)
 
 @csrf_exempt
+@login_required
 def get_admin_login_logs(request):
     """Restituisce tutti i log dei login amministrativi registrati sulla blockchain"""
     if request.method == 'GET':
@@ -48,6 +51,7 @@ def get_admin_login_logs(request):
     return JsonResponse({"error": "Metodo non consentito"}, status=405)
 
 @csrf_exempt
+@login_required
 def get_admin_action_logs_view(request):
     """Restituisce tutti i log delle azioni amministrative registrati sulla blockchain"""
     if request.method == 'GET':
