@@ -108,7 +108,7 @@
             <input type="hidden" id="edit_person_id" name="id">
             <div class="mb-3">
               <label for="edit_rfid" class="form-label">RFID</label>
-              <input type="text" class="form-control" id="edit_rfid" name="rfid" required>
+              <input type="text" class="form-control" id="edit_rfid" name="rfid" required  disabled>
             </div>
             <div class="mb-3">
               <label for="edit_first_name" class="form-label">Nome</label>
@@ -216,7 +216,7 @@
         url: '{% url "person_edit" %}',
         data: data,
         success: function (response) {
-          console.log(response)
+
           // Trova la riga della persona modificata nella tabella
           var row = $('#person-row-' + response.person.id);
                 
@@ -224,10 +224,19 @@
           row.find('td:nth-child(1)').text(response.person.rfid);
           row.find('td:nth-child(2)').text(response.person.first_name);
           row.find('td:nth-child(3)').text(response.person.last_name);
-          $('.btn-close').click();  // Simula il clic sul bottone di chiusura
+
+          // Aggiorna il bottone "Modifica" con i nuovi dati
+          var editButton = row.find('button[data-bs-target="#editPersonModal"]');
+          editButton.data('rfid', response.person.rfid);
+          editButton.data('first-name', response.person.first_name);
+          editButton.data('last-name', response.person.last_name);
+
+          // Chiudi la modale e resetta il form
+          $('.btn-close').click();
           $('#editPersonForm')[0].reset();
           loadLogs();
         }
+
       });
     });
 
@@ -261,7 +270,6 @@
       type: 'GET',
       url: '{% url "get_action_admin" %}',
       success: function(response) {
-        console.log(response)
         var logsContainer = $('#logContainer');
         logsContainer.empty(); // Svuota il contenitore esistente
 
