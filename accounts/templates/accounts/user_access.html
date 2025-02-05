@@ -4,18 +4,16 @@
   <div class="container mt-4">
     <div class="card shadow-lg p-4 rounded-3">
       <h3 class="text-center mb-4">Storico Accessi dell'Utente</h3>
-      <div class="card-body" style="height: 300px; overflow-y: auto; background-color: #f8f9fa;">
-        <div id="logContainer">
-          {% if logs %}
-            <ul class="list-group">
-              {% for log in logs %}
-                <li class="list-group-item">{{ log.timestamp }} - {{ log.message }}</li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <p class="text-center text-muted">Nessuna informazione disponibile.</p>
-          {% endif %}
-        </div>
+      <div id="logContainer" class="border p-3 rounded-3 bg-light" style="height: 300px; overflow-y: auto;">
+        {% if logs %}
+          <ul class="list-group">
+            {% for log in logs %}
+              <li class="list-group-item">{{ log.timestamp }} - {{ log.message }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-center text-muted">Nessuna informazione disponibile.</p>
+        {% endif %}
       </div>
     </div>
   </div>
