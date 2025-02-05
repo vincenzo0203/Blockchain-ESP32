@@ -93,7 +93,7 @@ def person_edit(request):
         admin = request.user.username
         id = request.POST.get('id')
         person = get_object_or_404(Person, pk=id)
-        person.rfid = request.POST.get('rfid')
+        #person.rfid = request.POST.get('rfid')
         person.first_name = request.POST.get('first_name')
         person.last_name = request.POST.get('last_name')
         person.save()
@@ -114,3 +114,6 @@ def person_delete(request):
         log_admin_action_on_blockchain(admin,"Eliminazione", person.rfid)
         person.delete()
         return JsonResponse({'status': 'success'})
+
+def custom_404(request, exception):
+    return render(request, 'errorPage/404.html', status=404)
