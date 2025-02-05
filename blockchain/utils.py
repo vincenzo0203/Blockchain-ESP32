@@ -4,6 +4,7 @@ from pathlib import Path
 from web3 import Web3
 import datetime
 from zoneinfo import ZoneInfo
+from accounts.models import Person
 
 
 WSL_PROJECT_PATH = config('WSL_PROJECT_PATH')
@@ -37,9 +38,7 @@ def get_contract_address():
 contract = web3.eth.contract(address=get_contract_address(), abi=contract_abi)
 
 def is_valid_uid(uid):
-    # Puoi personalizzare questa lista o spostare la logica sul database in futuro
-    valid_uids = ["f3620c35", "another_valid_uid"]  # Lista statica come esempio
-    return uid in valid_uids
+    return Person.objects.filter(rfid=uid).exists()
 
 def log_access_on_blockchain(rfid, granted):
     """Registra un accesso RFID sulla blockchain"""

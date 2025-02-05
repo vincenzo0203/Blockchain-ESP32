@@ -15,13 +15,12 @@ def check_uid(request):
                 return JsonResponse({"error": "UID non fornito"}, status=400)
 
             access_granted = is_valid_uid(uid)  # Controlla se l'UID è valido
-            tx_hash = log_access_on_blockchain(uid, access_granted)  # Registra nella blockchain
-
-            print(tx_hash)
 
             if access_granted:
+                tx_hash = log_access_on_blockchain(uid, access_granted)
                 return JsonResponse({"status": "success", "access": True})
             else:
+                tx_hash = log_access_on_blockchain(uid, access_granted)
                 return JsonResponse({"status": "success", "access": False})
         except json.JSONDecodeError:
             return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
